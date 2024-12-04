@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Final
 
 BASE_DIR: Final[Path] = Path(__file__).resolve().parent.parent
-JSON_FILE: Final[Path] = BASE_DIR / "task_db.json"
+JSON_FILE: Final[Path] = BASE_DIR / "library_db.json"
 
 LOG_DIR: Final[Path] = BASE_DIR / "logging"
 LOG_FORMAT: Final[str] = '"%(asctime)s - [%(levelname)s] - %(message)s"'
-LOG_FILE_NAME: Final[str] = "task_tracker.log"
+LOG_FILE_NAME: Final[str] = "book_library.log"
 
 # parser constants
 DESCRIPTION_CONSOLE_PROGRAM: Final[str] = (
@@ -61,7 +61,7 @@ CRUD_ARGUMENTS_HELD_TEXT: Final[str] = (
     f" {LONG_ARG_YEAR}={YEAR_FIELD_HELP_TEXT},"
     f" {LONG_ARG_AVAILABILITY}={AVAILABILITY_FIELD_HELP_TEXT}) \n"
     f"{ARG_DELETE} - Удаление книги. \n"
-    F" Обязательные поля ({LONG_ARG_ID}={ID_FIELD_HELP_TEXT})\n"
+    f" Обязательные поля ({LONG_ARG_ID}={ID_FIELD_HELP_TEXT})\n"
     f"{ARG_SEARCH} - Поиск книги по полю и ключевому слову.\n"
     f" Обязательные поля("
     f"{SHORT_ARG_NAME_FIELD}/{LONG_ARG_NAME_FIELD}={NAME_FIELD_HELP_TEXT},"

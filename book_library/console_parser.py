@@ -8,32 +8,25 @@ from book_library.constants import (
     ARG_PATCH,
     ARG_POST,
     ARG_SEARCH,
+    AUTHOR_FIELD_HELP_TEXT,
+    AVAILABILITY_FIELD_HELP_TEXT,
     CRUD_ARGUMENTS_HELD_TEXT,
     DESCRIPTION_CONSOLE_PROGRAM,
-    JSON_FILE,
-
-    LONG_ARG_ID,
     ID_FIELD_HELP_TEXT,
-
-    LONG_ARG_TITLE,
-    TITLE_FIELD_HELP_TEXT,
-
+    JSON_FILE,
     LONG_ARG_AUTHOR,
-    AUTHOR_FIELD_HELP_TEXT,
-
-    LONG_ARG_YEAR,
-    YEAR_FIELD_HELP_TEXT,
-
     LONG_ARG_AVAILABILITY,
-    AVAILABILITY_FIELD_HELP_TEXT,
-
-    SHORT_ARG_NAME_FIELD,
+    LONG_ARG_ID,
     LONG_ARG_NAME_FIELD,
-    NAME_FIELD_HELP_TEXT,
-
-    SHORT_ARG_VALUE,
+    LONG_ARG_TITLE,
     LONG_ARG_VALUE,
+    LONG_ARG_YEAR,
+    NAME_FIELD_HELP_TEXT,
+    SHORT_ARG_NAME_FIELD,
+    SHORT_ARG_VALUE,
+    TITLE_FIELD_HELP_TEXT,
     VALUE_HELP_TEXT,
+    YEAR_FIELD_HELP_TEXT,
 )
 from book_library.outputs import pretty_books_output
 from book_library.repository import RepositoryBook
@@ -45,12 +38,11 @@ from book_library.utils import except_control
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def get(repository: RepositoryBook, namespace: Namespace) -> None:
+    """Get book for id."""
     obj_id = namespace.id
 
     if obj_id is None:
-        warning_message = (
-            "Чтобы получить элементы, вы должны передать id"
-        )
+        warning_message = "Чтобы получить элементы, вы должны передать id"
         logging.warning(warning_message)
         print(warning_message)
         return
@@ -67,6 +59,7 @@ def get(repository: RepositoryBook, namespace: Namespace) -> None:
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def get_all(repository: RepositoryBook, namespace: Namespace):
+    """Get all books."""
     books = repository.get_all()
     pretty_books_output(books)
 
@@ -76,6 +69,7 @@ def get_all(repository: RepositoryBook, namespace: Namespace):
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def post(repository: RepositoryBook, namespace: Namespace) -> None:
+    """Create book."""
     fields = dict(
         title=namespace.title,
         author=namespace.author,
@@ -83,7 +77,7 @@ def post(repository: RepositoryBook, namespace: Namespace) -> None:
         availability=namespace.availability,
     )
     for field_name in fields:
-        if not fields[field_name]:
+        if fields[field_name] is None:
             warning_message = (
                 f"У обязательного поля {field_name} нет значения.",
                 "Для создания объекта необходимо дать значение",
@@ -102,6 +96,7 @@ def post(repository: RepositoryBook, namespace: Namespace) -> None:
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def patch(repository: RepositoryBook, namespace: Namespace) -> None:
+    """Update book for id."""
     obj_id = namespace.id
     fields = dict(
         title=namespace.title,
@@ -122,6 +117,7 @@ def patch(repository: RepositoryBook, namespace: Namespace) -> None:
         logging.warning(warning_message)
         print(warning_message)
         return
+    fields = {name: value for name, value in fields if value is not None}
 
     update_task = repository.update(obj_id=obj_id, **fields)
     pretty_books_output([update_task])
@@ -132,6 +128,7 @@ def patch(repository: RepositoryBook, namespace: Namespace) -> None:
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def delete(repository: RepositoryBook, namespace: Namespace) -> None:
+    """Delete book for id."""
     obj_id = namespace.id
 
     if obj_id is None:
@@ -152,6 +149,7 @@ def delete(repository: RepositoryBook, namespace: Namespace) -> None:
     validate_err_msg="Ошибка валидации в переданных полях.",
 )
 def search(repository: RepositoryBook, namespace: Namespace) -> None:
+    """Search books for field and value."""
     field = namespace.field
     value = namespace.value
 
@@ -178,8 +176,6 @@ CRUD = {
 
 
 def parser():
-    logging.info("Программа запущена.")
-
     repository = RepositoryBook(JSON_FILE)
 
     parser = ArgumentParser(
@@ -194,21 +190,17 @@ def parser():
     parser.add_argument(LONG_ARG_YEAR, type=int, help=YEAR_FIELD_HELP_TEXT)
     parser.add_argument(
         LONG_ARG_AVAILABILITY,
-        type=bool,
-        default=True,
-        help=AVAILABILITY_FIELD_HELP_TEXT
+        type=lambda x: (str(x).lower() == "true"),
+        help=AVAILABILITY_FIELD_HELP_TEXT,
     )
     parser.add_argument(
         SHORT_ARG_NAME_FIELD,
         LONG_ARG_NAME_FIELD,
         type=str,
-        help=NAME_FIELD_HELP_TEXT
+        help=NAME_FIELD_HELP_TEXT,
     )
     parser.add_argument(
-        SHORT_ARG_VALUE,
-        LONG_ARG_VALUE,
-        type=str,
-        help=VALUE_HELP_TEXT
+        SHORT_ARG_VALUE, LONG_ARG_VALUE, type=str, help=VALUE_HELP_TEXT
     )
 
     args: Namespace = parser.parse_args()

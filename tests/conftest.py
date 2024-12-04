@@ -2,38 +2,34 @@ from pathlib import Path
 
 import pytest
 
-from book_library.repository import RepositoryTask, BookSchema
+from book_library.repository import BookSchema, RepositoryBook
 
 
 @pytest.fixture
-def repository(tmpdir: Path) -> RepositoryTask:
+def repository(tmpdir: Path) -> RepositoryBook:
     json_path = Path(tmpdir / "test_task.json")
-    return RepositoryTask(json_path)
+    return RepositoryBook(json_path)
 
 
 @pytest.fixture
-def task() -> BookSchema:
-    task_ = BookSchema(
+def book() -> BookSchema:
+    book_ = BookSchema(
         id=1,
-        title="Изучить основы FastAPI",
-        description="Пройти документация по FastAPI",
-        category="Обучение",
-        due_date="2024-11-30",
-        priority="Высокий",
-        status=True,
+        title="Основы Python",
+        author="Лутц",
+        year=2023,
+        availability=True,
     )
-    return task_
+    return book_
 
 
 @pytest.fixture
-def task_update() -> BookSchema:
-    task_ = BookSchema(
-        id=1,
-        title="Изучить основы FastAPI_update",
-        description="Пройти документация по FastAPI_update",
-        category="Update category",
-        due_date="2024-01-13",
-        priority="Низкий",
-        status=False,
+def book_update() -> BookSchema:
+    book_ = BookSchema(
+        id=2,
+        title="Отцы и дети",
+        author="Не Пушкин",
+        year=1999,
+        availability=False,
     )
-    return task_
+    return book_

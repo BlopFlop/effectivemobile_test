@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Any, Optional
 
 from pydantic import BaseModel, Field
@@ -30,7 +29,7 @@ class BookSchema(BaseModel):
                 "title": "Основы Python",
                 "author": "Лутц",
                 "year": 2023,
-                "availability": True
+                "availability": True,
             }
         }
 
@@ -41,19 +40,20 @@ class BookSchema(BaseModel):
 class BookSchemaUpdate(BaseModel):
     """Pydantic schema for Book."""
 
-    id: int = Field(
-        title="Уникальный айди Книги в json",
-    )
-    title: str = Field(
+    title: Optional[str] = Field(
+        None,
         title="Название книги",
     )
-    author: str = Field(
+    author: Optional[str] = Field(
+        None,
         title="Автор",
     )
-    year: int = Field(
+    year: Optional[int] = Field(
+        None,
         title="Год издания",
     )
-    availability: bool = Field(
+    availability: Optional[bool] = Field(
+        None,
         title="Наличие книги",
     )
 
